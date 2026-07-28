@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şirin Dad — Admin Panel</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h1>Şirin Dad</h1>
+    <div class="sub">Admin panelə giriş</div>
+    <form id="loginForm">
+      <div class="field">
+        <label>İstifadəçi adı</label>
+        <input type="text" name="username" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Parol</label>
+        <input type="password" name="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Daxil ol</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN SHELL -->
+<div class="admin-shell" id="adminShell" style="display:none">
+  <aside class="admin-sidebar">
+    <div class="logo">Şirin<span>Dad</span></div>
+    <div class="nav-list">
+      <div class="nav-item active" data-tab="orders">📦 Sifarişlər <span class="badge-count" id="ordersBadge" style="display:none">0</span></div>
+      <div class="nav-item" data-tab="products">🎂 Məhsullar</div>
+      <div class="nav-item" data-tab="categories">🗂 Kateqoriyalar</div>
+      <div class="nav-item" data-tab="cards">💳 Kartlar</div>
+      <div class="nav-item" data-tab="settings">⚙️ Ayarlar</div>
+      <div class="nav-item" data-tab="account">🔐 Hesab</div>
+    </div>
+    <div class="nav-item logout-item" id="logoutBtn">↩ Çıxış</div>
+  </aside>
+
+  <main class="admin-main">
+    <!-- ORDERS TAB -->
+    <section class="tab-panel" id="tab-orders">
+      <div class="admin-topbar"><h1>Sifarişlər</h1><button class="small-btn btn-ghost" id="refreshOrders">↻ Yenilə</button></div>
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Müştəri</th><th>Telefon</th><th>Ünvan</th><th>Məhsullar</th><th>Cəmi</th><th>Kart</th><th>Ödəniş qeydi</th><th>Ödənilib</th><th>Status</th><th>Tarix</th>
+            </tr></thead>
+            <tbody id="ordersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS TAB -->
+    <section class="tab-panel" id="tab-products" style="display:none">
+      <div class="admin-topbar"><h1>Məhsullar</h1><button class="small-btn btn-primary" id="newProductBtn" style="background:var(--orange);color:white">+ Yeni məhsul</button></div>
+
+      <div class="panel" id="productFormPanel" style="display:none">
+        <h2 id="productFormTitle">Yeni məhsul</h2>
+        <form id="productForm">
+          <input type="hidden" name="id">
+          <div class="field">
+            <label>Kateqoriya</label>
+            <select name="category_id" id="productCategorySelect"></select>
+          </div>
+
+          <div class="lang-tabs">
+            <div class="lang-tab active" data-plang="az">AZ</div>
+            <div class="lang-tab" data-plang="ru">RU</div>
+            <div class="lang-tab" data-plang="en">EN</div>
+          </div>
+          <div class="plang-block" data-plang-block="az">
+            <div class="field"><label>Ad (AZ)</label><input type="text" name="name_az" maxlength="150"></div>
+            <div class="field"><label>Açıqlama (AZ)</label><textarea name="desc_az" maxlength="1000"></textarea></div>
+          </div>
+          <div class="plang-block" data-plang-block="ru" style="display:none">
+            <div class="field"><label>Название (RU)</label><input type="text" name="name_ru" maxlength="150"></div>
+            <div class="field"><label>Описание (RU)</label><textarea name="desc_ru" maxlength="1000"></textarea></div>
+          </div>
+          <div class="plang-block" data-plang-block="en" style="display:none">
+            <div class="field"><label>Name (EN)</label><input type="text" name="name_en" maxlength="150"></div>
+            <div class="field"><label>Description (EN)</label><textarea name="desc_en" maxlength="1000"></textarea></div>
+          </div>
+
+          <div class="field">
+            <label>Qiymət (AZN)</label>
+            <input type="number" name="price" step="0.01" min="0.01" required>
+          </div>
+
+          <div class="field">
+            <label>Şəkillər</label>
+            <div class="thumb-row" id="existingThumbs"></div>
+            <div class="thumb-row" id="newThumbs"></div>
+            <label class="upload-drop">
+              📷 Şəkil seçmək üçün klikləyin (max 6, hər biri 5MB-a qədər)
+              <input type="file" id="productImages" accept="image/png,image/jpeg,image/webp" multiple style="display:none">
+            </label>
+          </div>
+
+          <div class="field">
+            <label><input type="checkbox" name="is_active" checked style="width:auto;display:inline-block;margin-right:6px"> Aktiv (saytda göstərilsin)</label>
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <button type="submit" class="btn btn-primary">Yadda saxla</button>
+            <button type="button" class="btn btn-outline" id="cancelProductForm">Ləğv et</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Şəkil</th><th>Ad</th><th>Kateqoriya</th><th>Qiymət</th><th>Status</th><th></th></tr></thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES TAB -->
+    <section class="tab-panel" id="tab-categories" style="display:none">
+      <div class="admin-topbar"><h1>Kateqoriyalar</h1></div>
+      <div class="panel">
+        <h2>Yeni kateqoriya</h2>
+        <form id="categoryForm">
+          <div class="grid-3">
+            <div class="field"><label>Ad (AZ)</label><input type="text" name="name_az" required maxlength="80"></div>
+            <div class="field"><label>Название (RU)</label><input type="text" name="name_ru" required maxlength="80"></div>
+            <div class="field"><label>Name (EN)</label><input type="text" name="name_en" required maxlength="80"></div>
+          </div>
+          <button type="submit" class="btn btn-primary">Əlavə et</button>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>AZ</th><th>RU</th><th>EN</th><th></th></tr></thead>
+            <tbody id="categoriesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS TAB -->
+    <section class="tab-panel" id="tab-cards" style="display:none">
+      <div class="admin-topbar"><h1>Ödəniş kartları</h1></div>
+
+      <div class="panel">
+        <h2 id="cardFormTitle">Yeni kart əlavə et</h2>
+        <form id="cardForm">
+          <input type="hidden" name="id">
+          <div class="grid-2">
+            <div class="field">
+              <label>Bank</label>
+              <select id="bankSelect">
+                <option value="Kapital Bank">Kapital Bank</option>
+                <option value="ABB">ABB</option>
+                <option value="PAŞA Bank">PAŞA Bank</option>
+                <option value="Bank Respublika">Bank Respublika</option>
+                <option value="Yelo Bank">Yelo Bank</option>
+                <option value="Rabitəbank">Rabitəbank</option>
+                <option value="AccessBank">AccessBank</option>
+                <option value="Unibank">Unibank</option>
+                <option value="Muğanbank">Muğanbank</option>
+                <option value="Xalq Bank">Xalq Bank</option>
+                <option value="TuranBank">TuranBank</option>
+                <option value="AFB Bank">AFB Bank</option>
+                <option value="other">Digər (özün yaz)...</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Kart sahibinin adı</label>
+              <input type="text" name="card_holder" placeholder="Məs: Əli Əliyev">
+            </div>
+          </div>
+          <div class="field" id="bankCustomField" style="display:none">
+            <label>Bank adı (özün yaz)</label>
+            <input type="text" id="bankNameCustom" placeholder="Bank adı">
+          </div>
+          <div class="field">
+            <label>Kart nömrəsi</label>
+            <input type="text" name="card_number" placeholder="0000 0000 0000 0000" required>
+          </div>
+          <div class="field">
+            <label><input type="checkbox" name="is_active" checked style="width:auto;display:inline-block;margin-right:6px"> Aktiv (saytda göstərilsin, müştərilər seçə bilsin)</label>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button type="submit" class="btn btn-primary">Yadda saxla</button>
+            <button type="button" class="btn btn-outline" id="cancelCardForm" style="display:none">Ləğv et</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Bank</th><th>Kart nömrəsi</th><th>Sahib</th><th>Status</th><th></th></tr></thead>
+            <tbody id="cardsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS TAB -->
+    <section class="tab-panel" id="tab-settings" style="display:none">
+      <div class="admin-topbar"><h1>Sayt ayarları</h1></div>
+      <form id="settingsForm">
+        <div class="panel">
+          <h2>Əlaqə məlumatları</h2>
+          <div class="grid-2">
+            <div class="field"><label>Telefon</label><input type="text" name="phone" required></div>
+            <div class="field"><label>Instagram (istəyə bağlı)</label><input type="text" name="instagram"></div>
+          </div>
+          <div class="field"><label>İş saatları</label><input type="text" name="working_hours" placeholder="Hər gün 09:00–21:00"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Ünvan (3 dildə)</h2>
+          <div class="grid-3">
+            <div class="field"><label>AZ</label><textarea name="address_az"></textarea></div>
+            <div class="field"><label>RU</label><textarea name="address_ru"></textarea></div>
+            <div class="field"><label>EN</label><textarea name="address_en"></textarea></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Sayt haqqında qısa təsvir (3 dildə)</h2>
+          <div class="grid-3">
+            <div class="field"><label>AZ</label><textarea name="description_az"></textarea></div>
+            <div class="field"><label>RU</label><textarea name="description_ru"></textarea></div>
+            <div class="field"><label>EN</label><textarea name="description_en"></textarea></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Məkan (Google Xəritə)</h2>
+          <p class="hint-text">Google Maps-də məkanınızı açın, linki kopyalayın və aşağıya yapışdırın — koordinatlar avtomatik tapılacaq. Doldurulmasa saytda "Tezliklə..." yazısı görünəcək.</p>
+          <div class="field">
+            <label>Google Maps linki (yapışdırın)</label>
+            <input type="text" id="locationLinkPaste" placeholder="https://maps.google.com/... və ya https://maps.app.goo.gl/...">
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Enlik (latitude)</label><input type="text" name="location_lat" id="locationLat" placeholder="40.4093"></div>
+            <div class="field"><label>Uzunluq (longitude)</label><input type="text" name="location_lng" id="locationLng" placeholder="49.8671"></div>
+          </div>
+          <div class="field"><label>Açılış linki (istəyə bağlı, boş olsa avtomatik yaradılır)</label><input type="text" name="location_link" placeholder="https://maps.app.goo.gl/..."></div>
+          <div id="mapPreview" class="map-preview-admin"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Yadda saxla</button>
+      </form>
+    </section>
+
+    <!-- ACCOUNT TAB -->
+    <section class="tab-panel" id="tab-account" style="display:none">
+      <div class="admin-topbar"><h1>Hesab</h1></div>
+      <div class="panel">
+        <h2>Parolu dəyiş</h2>
+        <form id="passwordForm">
+          <div class="field"><label>Cari parol</label><input type="password" name="currentPassword" required></div>
+          <div class="field"><label>Yeni parol (ən az 6 simvol)</label><input type="password" name="newPassword" required minlength="6"></div>
+          <button type="submit" class="btn btn-primary">Yenilə</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>
