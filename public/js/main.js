@@ -123,7 +123,7 @@ function normalizeSocial(platform, raw) {
     const m = value.match(/instagram\.com\/([^/?#]+)/i);
     if (m) handle = m[1];
     handle = stripAt(handle);
-    return { label: @${handle}, href: https://instagram.com/${handle} };
+    return { label: `@${handle}`, href: https://instagram.com/${handle} };
   }
   if (platform === 'tiktok') {
     let handle = value;
