@@ -37,6 +37,9 @@ const I18N = {
     remove: 'Sil',
     noProducts: 'Bu kateqoriyada hələ məhsul yoxdur',
     required: 'Bu xana tələb olunur',
+    quantity: 'Miqdar',
+    backToMenu: 'Menyuya qayıt',
+    productNotFound: 'Məhsul tapılmadı',
   },
   ru: {
     tagline: 'Торты и выпечка на заказ',
@@ -76,6 +79,9 @@ const I18N = {
     remove: 'Удалить',
     noProducts: 'В этой категории пока нет товаров',
     required: 'Это поле обязательно',
+    quantity: 'Количество',
+    backToMenu: 'Назад в меню',
+    productNotFound: 'Товар не найден',
   },
   en: {
     tagline: 'Custom cakes and pastries, made to order',
@@ -115,6 +121,9 @@ const I18N = {
     remove: 'Remove',
     noProducts: 'No products in this category yet',
     required: 'This field is required',
+    quantity: 'Quantity',
+    backToMenu: 'Back to menu',
+    productNotFound: 'Product not found',
   },
 };
 
