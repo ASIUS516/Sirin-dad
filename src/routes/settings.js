@@ -9,7 +9,8 @@ const EDITABLE_FIELDS = [
   'address_az', 'address_ru', 'address_en',
   'description_az', 'description_ru', 'description_en',
   'card_number', 'card_holder', 'card_bank',
-  'instagram', 'working_hours',
+  'instagram', 'whatsapp', 'tiktok', 'youtube',
+  'working_hours',
   'location_lat', 'location_lng', 'location_link',
 ];
 
@@ -28,18 +29,20 @@ router.put('/', requireAdmin, (req, res) => {
   });
 
   db.prepare(
-    `UPDATE settings SET
+    UPDATE settings SET
       phone = ?, address_az = ?, address_ru = ?, address_en = ?,
       description_az = ?, description_ru = ?, description_en = ?,
       card_number = ?, card_holder = ?, card_bank = ?,
-      instagram = ?, working_hours = ?,
+      instagram = ?, whatsapp = ?, tiktok = ?, youtube = ?,
+      working_hours = ?,
       location_lat = ?, location_lng = ?, location_link = ?
-     WHERE id = 1`
+     WHERE id = 1
   ).run(
     updated.phone, updated.address_az, updated.address_ru, updated.address_en,
     updated.description_az, updated.description_ru, updated.description_en,
     updated.card_number, updated.card_holder, updated.card_bank,
-    updated.instagram, updated.working_hours,
+    updated.instagram, updated.whatsapp, updated.tiktok, updated.youtube,
+    updated.working_hours,
     updated.location_lat, updated.location_lng, updated.location_link
   );
 
