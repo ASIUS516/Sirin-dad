@@ -95,6 +95,9 @@ ensureColumn('settings', 'location_lng', "TEXT DEFAULT ''");
 ensureColumn('settings', 'location_link', "TEXT DEFAULT ''");
 ensureColumn('orders', 'paid_amount', 'REAL DEFAULT 0');
 ensureColumn('orders', 'payment_card_id', 'INTEGER');
+ensureColumn('settings', 'whatsapp', "TEXT DEFAULT ''");
+ensureColumn('settings', 'tiktok', "TEXT DEFAULT ''");
+ensureColumn('settings', 'youtube', "TEXT DEFAULT ''");
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS payment_cards (
