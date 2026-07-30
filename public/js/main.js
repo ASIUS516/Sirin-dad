@@ -123,27 +123,27 @@ function normalizeSocial(platform, raw) {
     const m = value.match(/instagram\.com\/([^/?#]+)/i);
     if (m) handle = m[1];
     handle = stripAt(handle);
-    return { label: `@${handle}`, href: https://instagram.com/${handle} };
+    return { label: `@${handle}`, href: `https://instagram.com/${handle}` };
   }
   if (platform === 'tiktok') {
     let handle = value;
     const m = value.match(/tiktok\.com\/@?([^/?#]+)/i);
     if (m) handle = m[1];
     handle = stripAt(handle);
-    return { label: @${handle}, href: https://www.tiktok.com/@${handle} };
+    return { label: `@${handle}`, href: `https://www.tiktok.com/@${handle}` };
   }
   if (platform === 'youtube') {
     if (/^https?:\/\//i.test(value)) {
       const label = value.replace(/^https?:\/\/(www\.)?youtube\.com\//i, '');
-      return { label: @${stripAt(label)}, href: value };
+      return { label: `@${stripAt(label)}`, href: value };
     }
     const handle = stripAt(value);
-    return { label: @${handle}, href: https://youtube.com/@${handle} };
+    return { label: `@${handle}`, href: `https://youtube.com/@${handle}` };
   }
   if (platform === 'whatsapp') {
     const digits = value.replace(/[^\d]/g, '');
     if (!digits) return null;
-    return { label: value.startsWith('+') ? value : +${digits}, href: https://wa.me/${digits} };
+    return { label: value.startsWith('+') ? value : `+${digits}`, href: `https://wa.me/${digits}` };
   }
   return null;
 }
@@ -156,10 +156,10 @@ function renderSocialLinks() {
     .map((p) => {
       const info = normalizeSocial(p, state.settings[p]);
       if (!info) return '';
-      return <a class="social-link social-${p}" href="${info.href}" target="_blank" rel="noopener">
+      return `<a class="social-link social-${p}" href="${info.href}" target="_blank" rel="noopener">
         <span class="social-icon">${SOCIAL_ICONS[p]}</span>
         <span class="social-label">${info.label}</span>
-      </a>;
+      </a>`;
     })
     .join('');
   wrap.innerHTML = html;
