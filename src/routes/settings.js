@@ -29,7 +29,7 @@ router.put('/', requireAdmin, (req, res) => {
   });
 
   db.prepare(
-    UPDATE settings SET
+    `UPDATE settings SET
       phone = ?, address_az = ?, address_ru = ?, address_en = ?,
       description_az = ?, description_ru = ?, description_en = ?,
       card_number = ?, card_holder = ?, card_bank = ?,
