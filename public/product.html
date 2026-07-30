@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şirin Dad — Məhsul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">Şirin<span>Dad</span></a>
+    <div class="header-actions">
+      <div class="lang-switch" id="langSwitch">
+        <button data-lang="az" class="active">AZ</button>
+        <button data-lang="ru">RU</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <button class="cart-btn" id="cartBtn" aria-label="Səbət">
+        🛒
+        <span class="cart-count" id="cartCount" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding: 24px 20px 60px">
+  <a href="/" class="back-link" data-i18n="backToMenu">← Menyuya qayıt</a>
+
+  <div id="productWrap">
+    <div class="loader"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-bottom">© <span id="year"></span> Şirin Dad</div>
+</footer>
+
+<!-- Cart drawer (identical to index.html) -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="cartDrawer" aria-label="Səbət">
+  <div class="drawer-header">
+    <h2 data-i18n="cart">Səbət</h2>
+    <button class="close-btn" id="closeCart" aria-label="Bağla">✕</button>
+  </div>
+  <div class="drawer-body" id="cartBody"></div>
+  <div class="drawer-footer" id="cartFooter" style="display:none">
+    <div class="total-row"><span data-i18n="total">Cəmi</span><span id="cartTotal">0 AZN</span></div>
+    <button class="btn btn-primary" style="width:100%" id="goToCheckout" data-i18n="checkout">Sifarişi tamamla</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/i18n.js"></script>
+<script src="/js/product.js"></script>
+</body>
+</html>
