@@ -94,15 +94,76 @@
   }
 
   function renderFooterInfo() {
-    if (!state.settings) return;
-    document.getElementById('footerPhone').textContent = state.settings.phone || '—';
-    const addr = fieldByLang(state.settings, 'address');
-    document.getElementById('footerAddress').textContent = addr || '—';
-    document.getElementById('footerAddressLine').style.display = addr ? '' : 'none';
-    const hours = state.settings.working_hours;
-    document.getElementById('footerHours').textContent = hours || '—';
-    document.getElementById('footerHoursLine').style.display = hours ? '' : 'none';
+  if (!state.settings) return;
+  document.getElementById('footerPhone').textContent = state.settings.phone || '—';
+  const addr = fieldByLang(state.settings, 'address');
+  document.getElementById('footerAddress').textContent = addr || '—';
+  document.getElementById('footerAddressLine').style.display = addr ? '' : 'none';
+  const hours = state.settings.working_hours;
+  document.getElementById('footerHours').textContent = hours || '—';
+  document.getElementById('footerHoursLine').style.display = hours ? '' : 'none';
+  renderSocialLinks();
+}
+
+const SOCIAL_ICONS = {
+  instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.1-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18a7.9 7.9 0 0 1-4.03-1.1l-.29-.17-3 .78.8-2.92-.19-.3A7.9 7.9 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.38-5.86c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.46-.39-.4-.54-.4-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 1.94 1.6 3.44 3.5 3.66v2.62a6.6 6.6 0 0 1-3.5-1.02v6.4c0 3-2.44 5.34-5.4 5.06-2.6-.24-4.6-2.4-4.6-5.06 0-2.86 2.4-5.14 5.28-5.06.24 0 .48.02.72.06v2.7a2.5 2.5 0 0 0-.72-.1c-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.6-1.14 2.6-2.6V3h2.12z"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 9l6 3-6 3V9z"/></svg>',
+};
+
+function normalizeSocial(platform, raw) {
+  if (!raw) return null;
+  const value = String(raw).trim();
+  if (!value) return null;
+  const stripAt = (s) => s.replace(/^@/, '').replace(/\/+$/, '');
+
+  if (platform === 'instagram') {
+    let handle = value;
+    const m = value.match(/instagram\.com\/([^/?#]+)/i);
+    if (m) handle = m[1];
+    handle = stripAt(handle);
+    return { label: @${handle}, href: https://instagram.com/${handle} };
   }
+  if (platform === 'tiktok') {
+    let handle = value;
+    const m = value.match(/tiktok\.com\/@?([^/?#]+)/i);
+    if (m) handle = m[1];
+    handle = stripAt(handle);
+    return { label: @${handle}, href: https://www.tiktok.com/@${handle} };
+  }
+  if (platform === 'youtube') {
+    if (/^https?:\/\//i.test(value)) {
+      const label = value.replace(/^https?:\/\/(www\.)?youtube\.com\//i, '');
+      return { label: @${stripAt(label)}, href: value };
+    }
+    const handle = stripAt(value);
+    return { label: @${handle}, href: https://youtube.com/@${handle} };
+  }
+  if (platform === 'whatsapp') {
+    const digits = value.replace(/[^\d]/g, '');
+    if (!digits) return null;
+    return { label: value.startsWith('+') ? value : +${digits}, href: https://wa.me/${digits} };
+  }
+  return null;
+}
+
+function renderSocialLinks() {
+  const wrap = document.getElementById('footerSocial');
+  if (!wrap || !state.settings) return;
+  const platforms = ['whatsapp', 'instagram', 'tiktok', 'youtube'];
+  const html = platforms
+    .map((p) => {
+      const info = normalizeSocial(p, state.settings[p]);
+      if (!info) return '';
+      return <a class="social-link social-${p}" href="${info.href}" target="_blank" rel="noopener">
+        <span class="social-icon">${SOCIAL_ICONS[p]}</span>
+        <span class="social-label">${info.label}</span>
+      </a>;
+    })
+    .join('');
+  wrap.innerHTML = html;
+}
 
   function renderLocation() {
     if (!state.settings) return;
