@@ -32,6 +32,12 @@ router.get('/admin', requireAdmin, (req, res) => {
   const rows = db.prepare('SELECT * FROM products ORDER BY id DESC').all();
   res.json(rows.map(parseProduct));
 });
+// Public: single product by id
+router.get('/:id', (req, res) => {
+  const row = db.prepare('SELECT * FROM products WHERE id = ? AND is_active = 1').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Məhsul tapılmadı' });
+  res.json(parseProduct(row));
+});
 
 router.post('/', requireAdmin, upload.array('images', 6), async (req, res) => {
   try {
