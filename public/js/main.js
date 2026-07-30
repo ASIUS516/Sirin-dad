@@ -262,7 +262,7 @@ function renderSocialLinks() {
       .map((p, i) => {
         const img = p.images && p.images[0] ? p.images[0] : '';
         return `
-        <div class="product-card" style="animation-delay:${Math.min(i * 0.05, 0.4)}s">
+        <div class="product-card" style="animation-delay:${Math.min(i * 0.05, 0.4)}s" data-id="${p.id}">
           ${img ? `<img class="product-photo" src="${img}" alt="${escapeHtml(fieldByLang(p, 'name'))}" loading="lazy">` : `<div class="product-photo"></div>`}
           <div class="product-body">
             <h3>${escapeHtml(fieldByLang(p, 'name'))}</h3>
