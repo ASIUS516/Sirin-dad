@@ -65,6 +65,9 @@ app.use(express.static(PUBLIC_DIR));
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'admin.html'));
 });
+app.get('/product/:id', (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'product.html'));
+});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
