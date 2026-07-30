@@ -36,7 +36,7 @@ router.put('/', requireAdmin, (req, res) => {
       instagram = ?, whatsapp = ?, tiktok = ?, youtube = ?,
       working_hours = ?,
       location_lat = ?, location_lng = ?, location_link = ?
-     WHERE id = 1
+     WHERE id = 1`
   ).run(
     updated.phone, updated.address_az, updated.address_ru, updated.address_en,
     updated.description_az, updated.description_ru, updated.description_en,
