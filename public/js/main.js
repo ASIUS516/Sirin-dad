@@ -277,7 +277,16 @@ function renderSocialLinks() {
       .join('');
 
     els.productGrid.querySelectorAll('.add-btn').forEach((btn) => {
-      btn.addEventListener('click', () => addToCart(Number(btn.dataset.id)));
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addToCart(Number(btn.dataset.id));
+      });
+    });
+
+    els.productGrid.querySelectorAll('.product-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        window.location.href = `/product/${card.dataset.id}`;
+      });
     });
   }
 
